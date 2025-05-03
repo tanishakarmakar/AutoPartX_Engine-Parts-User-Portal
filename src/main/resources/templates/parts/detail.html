@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+    <title>Part Details</title>
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="container my-5">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h2 th:text="${part.title}">Part Title</h2>
+                        <p class="text-muted">Posted by: 
+                            <span th:text="${part.postedBy.name}">User</span> on
+                            <span th:text="${#temporals.format(part.postDate, 'MMM dd, yyyy')}">
+                                Jan 01, 2023
+                            </span>
+                        </p>
+                    </div>
+                    <div sec:authorize="isAuthenticated()">
+                        <div th:if="${part.postedBy.id == user.id}">
+                            <a th:href="@{/parts/{id}/edit(id=${part.id})}" 
+                               class="btn btn-sm btn-outline-secondary me-2">Edit</a>
+                            <form th:action="@{/parts/{id}/delete(id=${part.id})}" 
+                                  method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <p class="lead" th:text="${part.description}">Description</p>
+                <h4 th:text="'$' + ${#numbers.formatDecimal(part.price, 1, 2)}">$0.00</h4>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4>Reviews</h4>
+            </div>
+            <div class="card-body">
+                <div sec:authorize="isAuthenticated()">
+                    <form th:action="@{/reviews/add/{partId}(partId=${part.id})}" 
+                          th:object="${review}" method="post" class="mb-4">
+                        <div class="mb-3">
+                            <textarea class="form-control" th:field="*{content}" 
+                                      placeholder="Write your review..." rows="3" required></textarea>
+                            <div class="invalid-feedback d-block" 
+                                 th:if="${#fields.hasErrors('content')}" 
+                                 th:errors="*{content}"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </form>
+                </div>
+
+                <div th:if="${part.reviews.empty}">
+                    <p class="text-muted">No reviews yet. Be the first to review!</p>
+                </div>
+
+                <div th:each="review : ${part.reviews}" class="mb-3 pb-3 border-bottom">
+                    <div class="d-flex justify-content-between">
+                        <strong th:text="${review.reviewer.name}">User Name</strong>
+                        <small class="text-muted" 
+                               th:text="${#temporals.format(review.reviewDate, 'MMM dd, yyyy')}">
+                            Jan 01, 2023
+                        </small>
+                    </div>
+                    <p th:text="${review.content}" class="mt-2">Review content</p>
+                    
+                    <div sec:authorize="isAuthenticated()">
+                        <form th:if="${review.reviewer.id == user.id}" 
+                              th:action="@{/reviews/{id}/delete(id=${review.id})}" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+    <title>Parts List</title>
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="container my-5">
+        <div class="d-flex justify-content-between mb-4">
+            <h2>Engine Parts</h2>
+            <a th:href="@{/parts/add}" class="btn btn-primary" sec:authorize="isAuthenticated()">
+                <i class="bi bi-plus"></i> Add Part
+            </a>
+        </div>
+
+        <form th:action="@{/parts/search}" method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="keyword" class="form-control" 
+                       th:value="${keyword}" placeholder="Search parts...">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+
+        <div th:fragment="part-list">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col" th:each="part : ${parts}">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${part.title}">Part Title</h5>
+                            <p class="card-text" th:text="${part.description}">Description</p>
+                            <p class="text-muted" th:text="'$' + ${#numbers.formatDecimal(part.price, 1, 2)}">$0.00</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a th:href="@{/parts/{id}(id=${part.id})}" class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

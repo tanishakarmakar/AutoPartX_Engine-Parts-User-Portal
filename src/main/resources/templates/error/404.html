@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+    <title>Page Not Found</title>
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="container my-5 text-center">
+        <div class="card border-danger">
+            <div class="card-body">
+                <h1 class="display-1 text-danger">404</h1>
+                <p class="lead">The page you requested could not be found</p>
+                <a th:href="@{/}" class="btn btn-primary">Return to Home</a>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
