@@ -31,7 +31,7 @@
                         <div class="card-body">
                             <h5 class="card-title" th:text="${part.title}">Part Title</h5>
                             <p class="card-text" th:text="${part.description}">Description</p>
-                            <p class="text-muted" th:text="'$' + ${#numbers.formatDecimal(part.price, 1, 2)}">$0.00</p>
+                            <p class="text-muted" th:text="'₹' + ${#numbers.formatDecimal(part.price, 1, 2)}">$0.00</p>
                         </div>
                         <div class="card-footer bg-transparent">
                             <a th:href="@{/parts/{id}(id=${part.id})}" class="btn btn-sm btn-outline-primary">
