@@ -6,26 +6,26 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "reviews")
 public class Review {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String content;
-    
+
     @Column(name = "review_date")
     private LocalDate reviewDate = LocalDate.now();
-    
-    @ManyToOne
-    @JoinColumn(name = "part_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "part_id", nullable = false)
     private Part part;
-    
-    @ManyToOne
-    @JoinColumn(name = "reviewer_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reviewer_id", nullable = false)
     private User reviewer;
 
     // Default constructor
-    public Review() {
-    }
+    public Review() {}
 
     // Getters and setters
     public Long getId() {
@@ -68,7 +68,7 @@ public class Review {
         this.reviewer = reviewer;
     }
 
-    // toString() method for debugging
+    // toString() method
     @Override
     public String toString() {
         return "Review{" +
@@ -80,7 +80,7 @@ public class Review {
                 '}';
     }
 
-    // equals() and hashCode() methods
+    // equals and hashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

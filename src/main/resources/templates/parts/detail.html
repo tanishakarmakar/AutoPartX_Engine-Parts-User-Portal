@@ -1,86 +1,101 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="fragments/head :: head">
     <title>Part Details</title>
 </head>
 <body>
-    <div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/header :: header"></div>
 
-    <main class="container my-5">
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <h2 th:text="${part.title}">Part Title</h2>
-                        <p class="text-muted">Posted by: 
-                            <span th:text="${part.postedBy.name}">User</span> on
-                            <span th:text="${#temporals.format(part.postDate, 'MMM dd, yyyy')}">
-                                Jan 01, 2023
-                            </span>
-                        </p>
-                    </div>
-                    <div sec:authorize="isAuthenticated()">
-                        <div th:if="${part.postedBy.id == user.id}">
-                            <a th:href="@{/parts/{id}/edit(id=${part.id})}" 
-                               class="btn btn-sm btn-outline-secondary me-2">Edit</a>
-                            <form th:action="@{/parts/{id}/delete(id=${part.id})}" 
-                                  method="post" class="d-inline">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <p class="lead" th:text="${part.description}">Description</p>
-                <h4 th:text="'$' + ${#numbers.formatDecimal(part.price, 1, 2)}">$0.00</h4>
-            </div>
-        </div>
+<main class="container my-5">
+    <!-- Success/Error Messages -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h4>Reviews</h4>
-            </div>
-            <div class="card-body">
-                <div sec:authorize="isAuthenticated()">
-                    <form th:action="@{/reviews/add/{partId}(partId=${part.id})}" 
-                          th:object="${review}" method="post" class="mb-4">
-                        <div class="mb-3">
-                            <textarea class="form-control" th:field="*{content}" 
-                                      placeholder="Write your review..." rows="3" required></textarea>
-                            <div class="invalid-feedback d-block" 
-                                 th:if="${#fields.hasErrors('content')}" 
-                                 th:errors="*{content}"></div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit Review</button>
-                    </form>
-                </div>
-
-                <div th:if="${part.reviews.empty}">
-                    <p class="text-muted">No reviews yet. Be the first to review!</p>
-                </div>
-
-                <div th:each="review : ${part.reviews}" class="mb-3 pb-3 border-bottom">
-                    <div class="d-flex justify-content-between">
-                        <strong th:text="${review.reviewer.name}">User Name</strong>
-                        <small class="text-muted" 
-                               th:text="${#temporals.format(review.reviewDate, 'MMM dd, yyyy')}">
+    <!-- Part Details Card -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h2 th:text="${part.title}">Part Title</h2>
+                    <p class="text-muted">
+                        Posted by: 
+                        <span th:text="${part.postedBy != null ? part.postedBy.name : 'Unknown'}">User</span>
+                        on
+                        <span th:text="${part.postDate != null ? #temporals.format(part.postDate, 'MMM dd, yyyy') : 'Unknown'}">
                             Jan 01, 2023
-                        </small>
-                    </div>
-                    <p th:text="${review.content}" class="mt-2">Review content</p>
-                    
-                    <div sec:authorize="isAuthenticated()">
-                        <form th:if="${review.reviewer.id == user.id}" 
-                              th:action="@{/reviews/{id}/delete(id=${review.id})}" method="post">
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="bi bi-trash"></i> Delete
+                        </span>
+                    </p>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <div th:if="${part.postedBy != null and user != null and part.postedBy.id == user.id}">
+                        <a th:href="@{/parts/{id}/edit(id=${part.id})}" class="btn btn-sm btn-outline-secondary me-2">Edit</a>
+                        <form th:action="@{/parts/{id}/delete(id=${part.id})}" method="post" class="d-inline">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Are you sure you want to delete this part?')">
+                                Delete
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
+            <p class="lead mt-3" th:text="${part.description}">Description</p>
+            <h4 th:text="'₹' + ${#numbers.formatDecimal(part.price, 1, 2)}">₹0.00</h4>
         </div>
-    </main>
+    </div>
 
-    <div th:replace="fragments/footer :: footer"></div>
+    <!-- Reviews Section -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Reviews</h4>
+        </div>
+        <div class="card-body">
+            <!-- Review Form -->
+            <div sec:authorize="isAuthenticated()">
+                <form th:action="@{/reviews/add/{partId}(partId=${part.id})}" th:object="${review}" method="post" class="mb-4">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <div class="mb-3">
+                        <textarea class="form-control" th:field="*{content}" placeholder="Write your review..." rows="3" required></textarea>
+                        <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+
+            <!-- Review List -->
+            <div th:if="${#lists.isEmpty(part.reviews)}">
+                <p class="text-muted">No reviews yet. Be the first to review!</p>
+            </div>
+            <div th:each="review : ${part.reviews}" class="mb-3 pb-3 border-bottom">
+                <div class="d-flex justify-content-between">
+                    <strong th:text="${review.reviewer != null ? review.reviewer.name : 'Anonymous'}">User Name</strong>
+                    <small class="text-muted" th:text="${review.reviewDate != null ? #temporals.format(review.reviewDate, 'MMM dd, yyyy') : ''}">
+                        Jan 01, 2023
+                    </small>
+                </div>
+                <p th:text="${review.content}" class="mt-2">Review content</p>
+
+                <!-- Delete Review Option -->
+                <div sec:authorize="isAuthenticated()">
+                    <form th:if="${review.reviewer != null and user != null and review.reviewer.id == user.id}"
+                          th:action="@{/reviews/{id}/delete(id=${review.id})}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this review?')">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<!-- Bootstrap Icons (Optional) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
 </body>
 </html>

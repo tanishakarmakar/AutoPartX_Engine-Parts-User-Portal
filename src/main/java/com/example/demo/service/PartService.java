@@ -58,7 +58,14 @@ public class PartService {
     }
     
     public Optional<Part> getPartById(Long id) {
-        return partRepository.findById(id);
+        return partRepository.findById(id)
+        .map(part -> {
+            // Initialize necessary relationships
+            if (part.getPostedBy() != null) {
+                part.getPostedBy().getName(); // Force load user
+            }
+            return part;
+        });
     }
     
     @Transactional

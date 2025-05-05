@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "parts")
@@ -9,19 +11,22 @@ public class Part {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String title;
     private String description;
     private Double price;
-    
+
     @Column(name = "post_date")
     private LocalDate postDate = LocalDate.now();
-    
+
     @ManyToOne
     @JoinColumn(name = "posted_by", referencedColumnName = "id")
     private User postedBy;
 
-    // Default constructor
+    // ✅ Add reviews list with proper mapping
+    @OneToMany(mappedBy = "part", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Review> reviews = new ArrayList<>();
+
     public Part() {
     }
 
@@ -74,7 +79,14 @@ public class Part {
         this.postedBy = postedBy;
     }
 
-    // toString() method for better logging/debugging
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
     @Override
     public String toString() {
         return "Part{" +
@@ -87,7 +99,6 @@ public class Part {
                 '}';
     }
 
-    // equals() and hashCode() methods
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

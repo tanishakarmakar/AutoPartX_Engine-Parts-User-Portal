@@ -69,11 +69,29 @@ public class PartController {
     }
 
     @GetMapping("/{id}")
-    public String viewPart(@PathVariable Long id, Model model) {
-        model.addAttribute("part", 
-            partService.getPartById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Part not found")));
-        return "parts/view";
+public String viewPart(@PathVariable Long id, Model model, @AuthenticationPrincipal User user) {
+
+        System.out.println("Accessing /parts/" + id); // Log access
+
+    Part part = partService.getPartById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Part not found"));
+
+    // Eagerly load the postedBy user
+    if (part.getPostedBy() != null) {
+        part.getPostedBy().getName(); // Force load
+    }
+
+    model.addAttribute("part", part);
+
+    // ✅ Add a new Review object to bind to the form
+    model.addAttribute("review", new com.example.demo.model.Review());
+
+    // Optional: add user info to show/hide form in Thymeleaf
+    if (user != null) {
+        model.addAttribute("user", user);
+    }
+
+    return "parts/detail"; // Matches your template filename
     }
 
     @PreAuthorize("isAuthenticated()")
