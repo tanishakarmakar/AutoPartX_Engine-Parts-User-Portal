@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.User;
+import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,8 +17,8 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final UserService userService;
 
-    public NotificationController(NotificationService notificationService, 
-                                UserService userService) {
+    public NotificationController(NotificationService notificationService,
+                                  UserService userService) {
         this.notificationService = notificationService;
         this.userService = userService;
     }
@@ -25,10 +26,11 @@ public class NotificationController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping
     public String listNotifications(Model model,
-                                  @AuthenticationPrincipal User user,
-                                  RedirectAttributes redirectAttributes) {
+                                    @AuthenticationPrincipal CustomUserDetails userDetails,
+                                    RedirectAttributes redirectAttributes) {
         try {
-            model.addAttribute("notifications", 
+            User user = userDetails.getUser(); // assuming CustomUserDetails has getUser()
+            model.addAttribute("notifications",
                 notificationService.getNotificationsForUser(user));
             return "notifications/list";
         } catch (Exception e) {
@@ -40,9 +42,10 @@ public class NotificationController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/mark-seen/{id}")
     public String markAsSeen(@PathVariable Long id,
-                           @AuthenticationPrincipal User user,
-                           RedirectAttributes redirectAttributes) {
+                             @AuthenticationPrincipal CustomUserDetails userDetails,
+                             RedirectAttributes redirectAttributes) {
         try {
+            User user = userDetails.getUser();
             notificationService.markAsSeen(id, user);
             redirectAttributes.addFlashAttribute("success", "Notification marked as read");
         } catch (Exception e) {
@@ -53,9 +56,10 @@ public class NotificationController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/mark-all-seen")
-    public String markAllAsSeen(@AuthenticationPrincipal User user,
-                              RedirectAttributes redirectAttributes) {
+    public String markAllAsSeen(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                RedirectAttributes redirectAttributes) {
         try {
+            User user = userDetails.getUser();
             notificationService.markAllAsSeen(user);
             redirectAttributes.addFlashAttribute("success", "All notifications marked as read");
         } catch (Exception e) {
