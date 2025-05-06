@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.PartDto;
 import com.example.demo.model.Part;
 import com.example.demo.model.User;
+import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.PartService;
 import com.example.demo.service.UserService;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -56,17 +57,18 @@ public class PartController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String addPart(@Valid @ModelAttribute("part") PartDto partDto,
-                         BindingResult result,
-                         @AuthenticationPrincipal User user,
-                         RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            return "parts/add";
-        }
-        
-        partService.createPart(partDto, user);
-        redirectAttributes.addFlashAttribute("success", "Part added successfully!");
-        return "redirect:/parts";
+                      BindingResult result,
+                      @AuthenticationPrincipal CustomUserDetails userDetails,
+                      RedirectAttributes redirectAttributes) {
+    if (result.hasErrors()) {
+        return "parts/add";
     }
+
+    User user = userDetails.getUser();
+    partService.createPart(partDto, user);
+    redirectAttributes.addFlashAttribute("success", "Part added successfully!");
+    return "redirect:/parts";
+}
 
     @GetMapping("/{id}")
 public String viewPart(@PathVariable Long id, Model model, @AuthenticationPrincipal User user) {
