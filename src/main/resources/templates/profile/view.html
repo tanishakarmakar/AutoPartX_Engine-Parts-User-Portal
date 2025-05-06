@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="fragments/header :: head"></head>
+<body>
+<header th:replace="fragments/header :: header"></header>
+
+<div class="profile-wrapper">
+    <div class="profile-container">
+        <div class="profile-header">
+            <h2>My Profile</h2>
+            <p class="profile-subtitle">Manage your account details</p>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Profile Picture -->
+        <div class="profile-picture-container">
+            <div class="profile-picture-wrapper">
+                <img th:src="@{/images/default-pfp.png}" alt="Profile Picture" class="profile-picture">
+                <div class="upload-overlay">
+                    <i class="fas fa-camera"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Form -->
+        <form method="post" th:action="@{/profile/update}" class="profile-form">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="name" name="name" th:value="${user.name}" placeholder=" " required>
+                <label for="name">Name</label>
+            </div>
+            <div class="form-floating mb-4">
+                <input type="email" class="form-control" id="email" name="email" th:value="${user.email}" placeholder=" " required>
+                <label for="email">Email</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100 profile-submit-btn">
+                <i class="fas fa-save me-2"></i>Update Profile
+            </button>
+        </form>
+    </div>
+</div>
+
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</body>
+</html>

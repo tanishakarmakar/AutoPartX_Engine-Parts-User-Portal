@@ -1,11 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.PartDto;
+import com.example.demo.dto.ReviewDto;
 import com.example.demo.model.Part;
 import com.example.demo.model.User;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.PartService;
-import com.example.demo.service.UserService;
+import com.example.demo.service.ReviewService;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.exception.AccessDeniedException;
 import jakarta.validation.Valid;
@@ -21,11 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/parts")
 public class PartController {
     private final PartService partService;
-    private final UserService userService;
+    private final ReviewService reviewService;
 
-    public PartController(PartService partService, UserService userService) {
+    public PartController(PartService partService, ReviewService reviewService) {
         this.partService = partService;
-        this.userService = userService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping
@@ -137,4 +138,19 @@ public String viewPart(@PathVariable Long id, Model model, @AuthenticationPrinci
         redirectAttributes.addFlashAttribute("success", "Part deleted successfully!");
         return "redirect:/parts";
     }
+
+    @PreAuthorize("isAuthenticated()")
+@GetMapping("/add/{partId}")
+public String showReviewForm(@PathVariable Long partId,
+                             Model model) {
+    Part part = partService.getPartById(partId)
+            .orElseThrow(() -> new RuntimeException("Part not found with id: " + partId));
+
+    model.addAttribute("review", new ReviewDto());  // ✅ clear the form
+    model.addAttribute("part", part);
+    model.addAttribute("reviews", reviewService.getReviewsByPart(partId));
+
+    return "parts/detail"; // 👈 assuming this is your form view
+}
+
 }
