@@ -580,3 +580,105 @@
         padding-left: 2.2rem;
     }
 }
+
+/* ========== ADD PAGE STYLES ========== */
+.apx1-add-page {
+    background-color: #f8fafc;
+    color: #334155;
+    font-family: 'Poppins', sans-serif;
+}
+
+.apx1-add-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.apx1-add-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.apx1-add-header h1 {
+    color: #1e293b;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.apx1-add-header i {
+    color: #2563eb;
+}
+
+.apx1-subtitle {
+    color: #64748b;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.apx1-form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(30, 41, 59, 0.08);
+    padding: 2rem;
+}
+
+.apx1-add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Error Message Styling */
+.apx1-error-message {
+    color: #b91c1c;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+/* Submit Button Styling */
+.apx1-submit-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.apx1-submit-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .apx1-add-container {
+        padding: 0 1.5rem;
+    }
+    
+    .apx1-form-card {
+        padding: 1.5rem;
+    }
+    
+    .apx1-add-header h1 {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .apx1-add-header h1 {
+        font-size: 1.5rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .apx1-form-actions {
+        flex-direction: column;
+    }
+    
+    .apx1-btn {
+        justify-content: center;
+    }
+}
