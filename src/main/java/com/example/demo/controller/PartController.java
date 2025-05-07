@@ -31,7 +31,7 @@ public class PartController {
 
     @GetMapping
     public String listParts(Model model,
-                          @RequestParam(required = false) Integer month) {
+                            @RequestParam(required = false) Integer month) {
         if (month != null) {
             model.addAttribute("parts", partService.getPartsBySeason(month));
             model.addAttribute("selectedMonth", month);
@@ -58,99 +58,105 @@ public class PartController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String addPart(@Valid @ModelAttribute("part") PartDto partDto,
-                      BindingResult result,
-                      @AuthenticationPrincipal CustomUserDetails userDetails,
-                      RedirectAttributes redirectAttributes) {
-    if (result.hasErrors()) {
-        return "parts/add";
+                          BindingResult result,
+                          @AuthenticationPrincipal CustomUserDetails userDetails,
+                          RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "parts/add";
+        }
+
+        User user = userDetails.getUser();
+        partService.createPart(partDto, user);
+        redirectAttributes.addFlashAttribute("success", "Part added successfully!");
+        return "redirect:/parts";
     }
 
-    User user = userDetails.getUser();
-    partService.createPart(partDto, user);
-    redirectAttributes.addFlashAttribute("success", "Part added successfully!");
-    return "redirect:/parts";
-}
-
     @GetMapping("/{id}")
-public String viewPart(@PathVariable Long id, Model model, @AuthenticationPrincipal User user) {
+    public String viewPart(@PathVariable Long id, Model model,
+                           @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         System.out.println("Accessing /parts/" + id); // Log access
 
-    Part part = partService.getPartById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Part not found"));
+        Part part = partService.getPartById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Part not found"));
 
-    // Eagerly load the postedBy user
-    if (part.getPostedBy() != null) {
-        part.getPostedBy().getName(); // Force load
-    }
+        if (part.getPostedBy() != null) {
+            part.getPostedBy().getName(); // Force load
+        }
 
-    model.addAttribute("part", part);
+        model.addAttribute("part", part);
+        model.addAttribute("review", new com.example.demo.model.Review());
 
-    // ✅ Add a new Review object to bind to the form
-    model.addAttribute("review", new com.example.demo.model.Review());
+        if (userDetails != null) {
+            model.addAttribute("user", userDetails.getUser());
+        }
 
-    // Optional: add user info to show/hide form in Thymeleaf
-    if (user != null) {
-        model.addAttribute("user", user);
-    }
-
-    return "parts/detail"; // Matches your template filename
+        return "parts/detail";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable Long id, 
-                             Model model,
-                             @AuthenticationPrincipal User user) {
+                         Model model,
+                         @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        User currentUser = userDetails.getUser(); // ✅ Get the actual user
         Part part = partService.getPartById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Part not found"));
-        
-        if (!part.getPostedBy().equals(user)) {
+
+        if (part.getPostedBy() == null || !part.getPostedBy().getId().equals(currentUser.getId())) {
             throw new AccessDeniedException("You can only edit your own parts");
         }
-        
-        model.addAttribute("part", part);
+
+        // ✅ Map Part to PartDto
+        PartDto partDto = new PartDto();
+        partDto.setId(part.getId());
+        partDto.setTitle(part.getTitle());
+        partDto.setDescription(part.getDescription());
+        partDto.setPrice(part.getPrice());
+
+        model.addAttribute("part", partDto); // ✅ Bind PartDto instead of Part
         return "parts/edit";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/edit")
     public String updatePart(@PathVariable Long id,
-                           @Valid @ModelAttribute("part") PartDto partDto,
-                           BindingResult result,
-                           @AuthenticationPrincipal User user,
-                           RedirectAttributes redirectAttributes) {
+                             @Valid @ModelAttribute("part") PartDto partDto,
+                             BindingResult result,
+                             @AuthenticationPrincipal CustomUserDetails userDetails,
+                             RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "parts/edit";
         }
-        
-        partService.updatePart(id, partDto, user);
+
+        User user = userDetails.getUser();
+        partService.updatePart(id, partDto, user); // Ensure service handles DTO
         redirectAttributes.addFlashAttribute("success", "Part updated successfully!");
         return "redirect:/parts/" + id;
     }
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/delete")
     public String deletePart(@PathVariable Long id,
-                           @AuthenticationPrincipal User user,
-                           RedirectAttributes redirectAttributes) {
+                             @AuthenticationPrincipal CustomUserDetails userDetails,
+                             RedirectAttributes redirectAttributes) {
+        User user = userDetails.getUser();
         partService.deletePart(id, user);
         redirectAttributes.addFlashAttribute("success", "Part deleted successfully!");
         return "redirect:/parts";
     }
 
     @PreAuthorize("isAuthenticated()")
-@GetMapping("/add/{partId}")
-public String showReviewForm(@PathVariable Long partId,
-                             Model model) {
-    Part part = partService.getPartById(partId)
-            .orElseThrow(() -> new RuntimeException("Part not found with id: " + partId));
+    @GetMapping("/add/{partId}")
+    public String showReviewForm(@PathVariable Long partId,
+                                 Model model) {
+        Part part = partService.getPartById(partId)
+                .orElseThrow(() -> new RuntimeException("Part not found with id: " + partId));
 
-    model.addAttribute("review", new ReviewDto());  // ✅ clear the form
-    model.addAttribute("part", part);
-    model.addAttribute("reviews", reviewService.getReviewsByPart(partId));
+        model.addAttribute("review", new ReviewDto());
+        model.addAttribute("part", part);
+        model.addAttribute("reviews", reviewService.getReviewsByPart(partId));
 
-    return "parts/detail"; // 👈 assuming this is your form view
-}
-
+        return "parts/detail";
+    }
 }

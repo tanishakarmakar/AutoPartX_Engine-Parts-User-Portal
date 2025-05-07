@@ -1,55 +1,97 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/head :: head">
-    <title>Parts List</title>
+    <title>AutoPartX | Parts Catalog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
 </head>
-<body>
+<body class="apx-parts-page">
     <div th:replace="fragments/header :: header"></div>
 
-    <main class="container my-5">
-        <!-- ✅ Flash Success Message -->
-        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+    <main class="apx-parts-container">
+        <!-- Flash Message -->
+        <div th:if="${success}" class="apx-alert apx-alert-success animate__animated animate__fadeIn">
             <span th:text="${success}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="apx-alert-close" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
 
-        <div class="d-flex justify-content-between mb-4">
-            <h2>Engine Parts</h2>
-            <a th:href="@{/parts/add}" class="btn btn-primary" sec:authorize="isAuthenticated()">
-                <i class="bi bi-plus"></i> Add Part
+        <div class="apx-parts-header">
+            <h1 class="apx-parts-title">Engine Parts Catalog</h1>
+            <a th:href="@{/parts/add}" class="apx-add-part-btn" sec:authorize="isAuthenticated()">
+                <i class="fas fa-plus-circle"></i> Add New Part
             </a>
         </div>
 
-        <form th:action="@{/parts/search}" method="get" class="mb-4">
-            <div class="input-group">
-                <input type="text" name="keyword" class="form-control" 
-                       th:value="${keyword}" placeholder="Search parts...">
-                <button class="btn btn-outline-secondary" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
+        <form th:action="@{/parts/search}" method="get" class="apx-search-form">
+            <div class="apx-search-container">
+                <div class="apx-search-group">
+                    <i class="fas fa-search apx-search-icon"></i>
+                    <input type="text" name="keyword" class="apx-search-input" 
+                           th:value="${keyword}" placeholder="Search parts by title or description...">
+                    <button class="apx-search-btn" type="submit">
+                        Search
+                    </button>
+                </div>
             </div>
         </form>
 
-        <div th:fragment="part-list">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col" th:each="part : ${parts}">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${part.title}">Part Title</h5>
-                            <p class="card-text" th:text="${part.description}">Description</p>
-                            <p class="text-muted" th:text="'₹' + ${#numbers.formatDecimal(part.price, 1, 2)}">$0.00</p>
-                        </div>
-                        <div class="card-footer bg-transparent">
-                            <a th:href="@{/parts/{id}(id=${part.id})}" class="btn btn-sm btn-outline-primary">
-                                View Details
-                            </a>
-                        </div>
+        <div class="apx-parts-grid">
+            <div class="apx-part-card" th:each="part : ${parts}">
+                <div class="apx-part-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="apx-part-body">
+                    <div class="apx-part-header">
+                        <h3 class="apx-part-title" th:text="${part.title}">Part Title</h3>
+                        <span class="apx-part-price" th:text="'₹' + ${#numbers.formatDecimal(part.price, 1, 2)}">₹0.00</span>
                     </div>
+                    <p class="apx-part-desc" th:text="${part.description}">Part description goes here with important details about specifications.</p>
+                </div>
+                <div class="apx-part-actions">
+                    <a th:href="@{/parts/{id}(id=${part.id})}" class="apx-view-btn">
+                        <i class="fas fa-eye"></i> View Details
+                    </a>
                 </div>
             </div>
+        </div>
+
+        <div class="apx-no-results" th:if="${parts != null && parts.empty}">
+            <div class="apx-no-results-icon">
+                <i class="fas fa-search-minus"></i>
+            </div>
+            <h3>No Parts Found</h3>
+            <p>Try adjusting your search or add a new part to the catalog</p>
+            <a th:href="@{/parts/add}" class="apx-add-part-btn" sec:authorize="isAuthenticated()">
+                <i class="fas fa-plus-circle"></i> Add Part
+            </a>
         </div>
     </main>
 
     <div th:replace="fragments/footer :: footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on load
+            const cards = document.querySelectorAll('.apx-part-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `all 0.4s ease ${index * 0.1}s`;
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 50);
+            });
+
+            // Close alert button
+            document.querySelector('.apx-alert-close')?.addEventListener('click', function() {
+                this.closest('.apx-alert').style.opacity = '0';
+                setTimeout(() => {
+                    this.closest('.apx-alert').remove();
+                }, 300);
+            });
+        });
+    </script>
 </body>
 </html>

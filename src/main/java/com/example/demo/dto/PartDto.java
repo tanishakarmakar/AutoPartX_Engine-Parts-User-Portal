@@ -18,6 +18,8 @@ public class PartDto {
     @Positive(message = "Price must be positive")
     private Double price;
 
+    private Long id;
+
     // Getters and Setters
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -25,4 +27,13 @@ public class PartDto {
     public void setDescription(String description) { this.description = description; }
     public Double getPrice() { return price; }
     public void setPrice(Double price) { this.price = price; }
+
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
 }

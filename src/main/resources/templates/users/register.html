@@ -1,34 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head">
-    <title>Register</title>
+    <title>AutoPartX | Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-light">
-    <div class="container d-flex flex-column min-vh-100 justify-content-center align-items-center">
-        <div class="card w-100" style="max-width: 400px;">
-            <div class="card-header bg-primary text-white text-center">
-                <h4>Create Account</h4>
+<body class="apx-login">
+    <div class="apx-login-container">
+        <div class="apx-login-card">
+            <div class="apx-login-header">
+                
+                <h2>Create Your Account</h2>
+                <p class="apx-login-subtitle">Join the AutoPartX community</p>
             </div>
-            <div class="card-body">
+            
+            <div class="apx-login-body">
                 <form th:action="@{/register}" th:object="${user}" method="post">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="name" 
-                               th:field="*{name}" required>
+                    <div class="apx-form-group">
+                        <label for="name" class="apx-form-label">Full Name</label>
+                        <div class="apx-input-group">
+                            <span class="apx-input-icon"><i class="fas fa-user"></i></span>
+                            <input type="text" class="apx-form-control" id="name" 
+                                   th:field="*{name}" required placeholder="John Doe">
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" 
-                               th:field="*{email}" required>
+                    
+                    <div class="apx-form-group">
+                        <label for="email" class="apx-form-label">Email</label>
+                        <div class="apx-input-group">
+                            <span class="apx-input-icon"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="apx-form-control" id="email" 
+                                   th:field="*{email}" required placeholder="example@email.com">
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" 
-                               th:field="*{password}" required>
+                    
+                    <div class="apx-form-group">
+                        <label for="password" class="apx-form-label">Password</label>
+                        <div class="apx-input-group">
+                            <span class="apx-input-icon"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="apx-form-control" id="password" 
+                                   th:field="*{password}" required placeholder="At least 8 characters">
+                        </div>
+                        <div class="apx-password-hints">
+                            <span class="apx-hint-item"><i class="fas fa-check-circle"></i> 8+ characters</span>
+                            <span class="apx-hint-item"><i class="fas fa-check-circle"></i> 1 number</span>
+                        </div>
                     </div>
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Register</button>
-                        <a th:href="@{/login}" class="btn btn-link">Already have an account? Login</a>
+                    
+                    <button type="submit" class="apx-login-btn">
+                        <i class="fas fa-user-plus me-2"></i> Create Account
+                    </button>
+                    
+                    <div class="apx-login-footer">
+                        <p>Already have an account? <a th:href="@{/login}" class="apx-login-link">Sign in</a></p>
                     </div>
                 </form>
             </div>

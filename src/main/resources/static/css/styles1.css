@@ -1,0 +1,582 @@
+/* ========== DETAILS PAGE STYLES ========== */
+/* Base Styles */
+.apx1-details-page {
+    background-color: #f8fafc;
+    color: #334155;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+}
+
+.apx1-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* Messages */
+.apx1-message {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.apx1-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    border-left: 4px solid #10b981;
+}
+
+.apx1-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-left: 4px solid #ef4444;
+}
+
+.apx1-close-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 1rem;
+}
+
+/* Part Detail Card */
+.apx1-part-detail-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(30, 41, 59, 0.08);
+    margin-bottom: 3rem;
+    overflow: hidden;
+}
+
+.apx1-part-header {
+    display: flex;
+    padding: 2rem;
+    border-bottom: 1px solid #f1f5f9;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.apx1-part-icon {
+    background: #eff6ff;
+    color: #2563eb;
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.apx1-part-info {
+    flex: 1;
+}
+
+.apx1-part-title {
+    color: #1e293b;
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.apx1-part-meta {
+    display: flex;
+    gap: 1.5rem;
+    color: #64748b;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+}
+
+.apx1-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.apx1-meta-item i {
+    color: #94a3b8;
+}
+
+.apx1-part-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    background: #f8fafc;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    align-self: center;
+}
+
+.apx1-part-content {
+    padding: 2rem;
+}
+
+.apx1-part-description {
+    color: #334155;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.apx1-part-actions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* Buttons */
+.apx1-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.apx1-edit-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.apx1-edit-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.apx1-delete-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.apx1-delete-btn:hover {
+    background: #fecaca;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+/* Reviews Section */
+.apx1-reviews-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(30, 41, 59, 0.08);
+}
+
+.apx1-reviews-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.apx1-reviews-header h2 {
+    color: #1e293b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.apx1-review-icon {
+    color: #f59e0b;
+}
+
+.apx1-review-form {
+    padding: 2rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.apx1-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.apx1-form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #1e293b;
+}
+
+.apx1-review-input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8fafc;
+    resize: vertical;
+    min-height: 120px;
+}
+
+.apx1-review-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.apx1-form-error {
+    color: #b91c1c;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.apx1-submit-review {
+    background: #2563eb;
+    color: white;
+}
+
+.apx1-submit-review:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.apx1-reviews-list {
+    padding: 0 2rem;
+}
+
+.apx1-empty-reviews {
+    text-align: center;
+    padding: 3rem 0;
+    color: #64748b;
+}
+
+.apx1-empty-icon {
+    font-size: 3rem;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+}
+
+.apx1-empty-reviews h3 {
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+}
+
+.apx1-review-item {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.apx1-review-item:last-child {
+    border-bottom: none;
+}
+
+.apx1-review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.apx1-reviewer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.apx1-reviewer-avatar {
+    width: 40px;
+    height: 40px;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.apx1-reviewer-name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.apx1-review-date {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+
+.apx1-review-content {
+    color: #334155;
+    line-height: 1.6;
+    padding-left: 56px; /* Align with avatar */
+}
+
+.apx1-delete-review {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.apx1-delete-review:hover {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .apx1-container {
+        padding: 0 1.5rem;
+    }
+    
+    .apx1-part-header {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+    
+    .apx1-part-price {
+        align-self: flex-start;
+    }
+    
+    .apx1-part-content {
+        padding: 1.5rem;
+    }
+    
+    .apx1-part-actions {
+        flex-direction: column;
+    }
+    
+    .apx1-review-form, .apx1-reviews-list {
+        padding: 1.5rem;
+    }
+    
+    .apx1-review-content {
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .apx1-part-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .apx1-review-form {
+        padding: 1rem;
+    }
+}
+
+/* ========== EDIT PAGE STYLES ========== */
+.apx1-edit-page {
+    background-color: #f8fafc;
+    color: #334155;
+    font-family: 'Poppins', sans-serif;
+}
+
+.apx1-edit-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.apx1-edit-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.apx1-edit-header h1 {
+    color: #1e293b;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.apx1-edit-header i {
+    color: #2563eb;
+}
+
+.apx1-form-wrapper {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(30, 41, 59, 0.08);
+    padding: 2rem;
+}
+
+/* Error Messages */
+.apx1-error-messages {
+    margin-bottom: 1.5rem;
+}
+
+.apx1-error-card {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-left: 4px solid #ef4444;
+    padding: 1rem;
+    border-radius: 0 8px 8px 0;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.apx1-error-card i {
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+}
+
+.apx1-error-text {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Form Styles */
+.apx1-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.apx1-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.apx1-form-label {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.95rem;
+}
+
+.apx1-input-group {
+    position: relative;
+}
+
+.apx1-input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: 1rem;
+}
+
+.apx1-form-input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+}
+
+.apx1-form-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.apx1-textarea {
+    min-height: 120px;
+    resize: vertical;
+    padding-top: 1rem;
+    line-height: 1.6;
+}
+
+/* Form Actions */
+.apx1-form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f1f5f9;
+}
+
+.apx1-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.apx1-save-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.apx1-save-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.apx1-cancel-btn {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.apx1-cancel-btn:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .apx1-edit-container {
+        padding: 0 1.5rem;
+    }
+    
+    .apx1-form-wrapper {
+        padding: 1.5rem;
+    }
+    
+    .apx1-form-actions {
+        flex-direction: column;
+    }
+    
+    .apx1-btn {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .apx1-edit-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .apx1-form-input {
+        padding-left: 2.2rem;
+    }
+}

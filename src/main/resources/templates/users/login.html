@@ -1,31 +1,51 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head"> 
-    <title>Login</title>
+<head th:replace="fragments/head :: head">
+    <title>AutoPartX | Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-light">
-    <div class="container d-flex flex-column min-vh-100 justify-content-center align-items-center">
-        <div class="card w-100" style="max-width: 400px;">
-            <div class="card-header bg-primary text-white text-center">
-                <h4>Sign In!</h4>
+<body class="apx-login">
+    <div class="apx-login-container">
+        <div class="apx-login-card">
+            <div class="apx-login-header">
+                
+                <h2>Welcome Back</h2>
+                <p class="apx-login-subtitle">Sign in to your AutoPartX account</p>
             </div>
-            <div class="card-body">
+            
+            <div class="apx-login-body">
                 <form th:action="@{/login}" method="post">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <div th:if="${param.error}" class="alert alert-danger">
+                    
+                    <div th:if="${param.error}" class="apx-alert apx-alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
                         Invalid username or password
                     </div>
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="username" name="username" required>
+                    
+                    <div class="apx-form-group">
+                        <label for="username" class="apx-form-label">Email</label>
+                        <div class="apx-input-group">
+                            <span class="apx-input-icon"><i class="fas fa-envelope"></i></span>
+                            <input type="email" class="apx-form-control" id="username" name="username" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                    
+                    <div class="apx-form-group">
+                        <label for="password" class="apx-form-label">Password</label>
+                        <div class="apx-input-group">
+                            <span class="apx-input-icon"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="apx-form-control" id="password" name="password" required>
+                        </div>
                     </div>
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                        <a th:href="@{/register}" class="btn btn-link">Create an account</a>
+                    
+                    <button type="submit" class="apx-login-btn">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login
+                    </button>
+                    
+                    <div class="apx-login-footer">
+                        <a th:href="@{/register}" class="apx-register-link">
+                            Don't have an account? <span>Create one</span>
+                        </a>
                     </div>
                 </form>
             </div>
