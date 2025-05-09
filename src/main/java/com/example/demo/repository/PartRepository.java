@@ -18,4 +18,15 @@ public interface PartRepository extends JpaRepository<Part, Long> {
     @Query("SELECT COUNT(p) FROM Part p WHERE p.postDate BETWEEN :startDate AND :endDate")
 Long countByPostDateBetween(@Param("startDate") LocalDate startDate, 
                            @Param("endDate") LocalDate endDate);
+
+                           @Query("SELECT " +
+                           "CASE " +
+                           " WHEN EXTRACT(MONTH FROM p.postDate) IN (12, 1, 2) THEN 'Winter' " +
+                           " WHEN EXTRACT(MONTH FROM p.postDate) IN (3, 4, 5) THEN 'Spring' " +
+                           " WHEN EXTRACT(MONTH FROM p.postDate) IN (6, 7, 8) THEN 'Summer' " +
+                           " ELSE 'Autumn' END AS season, COUNT(p) " +
+                           "FROM Part p " +
+                           "GROUP BY season ORDER BY season")
+                    List<Object[]> getSeasonalPartStats();
+                    
 }

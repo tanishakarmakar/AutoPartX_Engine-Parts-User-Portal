@@ -37,7 +37,8 @@
                               th:text="${#temporals.format(notification.createdAt, 'MMM dd, HH:mm')}">
                             Jan 01, 12:00
                         </span>
-                        <form th:action="@{/notifications/mark-seen/{id}(id=${notification.id})}" 
+                        <form th:unless="${notification.seen}" 
+                              th:action="@{/notifications/mark-seen/{id}(id=${notification.id})}" 
                               method="post">
                             <button type="submit" class="apx1-mark-btn">
                                 <i class="fas fa-check"></i> Mark as Read

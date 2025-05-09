@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head">
+    <title>AutoPartX | Seasonal Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/styles1.css}"/>
+</head>
+<body class="apx1-stats-page">
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="apx1-stats-container">
+        <div class="apx1-stats-header">
+            <h1><i class="fas fa-chart-line"></i> Seasonal Parts Analytics</h1>
+            <p class="apx1-stats-subtitle">Visualizing part posting trends throughout the year</p>
+        </div>
+
+        <div class="apx1-chart-container">
+            <canvas id="seasonChart"></canvas>
+        </div>
+
+        <div class="apx1-stats-summary">
+            <div class="apx1-stat-card">
+                <i class="fas fa-arrow-up apx1-stat-icon"></i>
+                <div>
+                    <h3>Peak Season</h3>
+                    <p id="peakSeason">Loading...</p>
+                </div>
+            </div>
+            <div class="apx1-stat-card">
+                <i class="fas fa-arrow-down apx1-stat-icon"></i>
+                <div>
+                    <h3>Low Season</h3>
+                    <p id="lowSeason">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/stats/seasonal-parts')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = Object.keys(data);
+                    const values = Object.values(data);
+                    
+                    // Calculate peak and low seasons
+                    const maxValue = Math.max(...values);
+                    const minValue = Math.min(...values);
+                    const peakSeason = labels[values.indexOf(maxValue)];
+                    const lowSeason = labels[values.indexOf(minValue)];
+                    
+                    document.getElementById('peakSeason').textContent = peakSeason;
+                    document.getElementById('lowSeason').textContent = lowSeason;
+
+                    const ctx = document.getElementById('seasonChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        plugins: [ChartDataLabels],
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Parts Posted',
+                                data: values,
+                                backgroundColor: [
+                                    'rgba(37, 99, 235, 0.8)',
+                                    'rgba(5, 150, 105, 0.8)',
+                                    'rgba(245, 158, 11, 0.8)',
+                                    'rgba(220, 38, 38, 0.8)'
+                                ],
+                                borderColor: [
+                                    'rgba(37, 99, 235, 1)',
+                                    'rgba(5, 150, 105, 1)',
+                                    'rgba(245, 158, 11, 1)',
+                                    'rgba(220, 38, 38, 1)'
+                                ],
+                                borderWidth: 1,
+                                borderRadius: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    backgroundColor: '#1E293B',
+                                    titleFont: {
+                                        size: 14,
+                                        family: 'Poppins'
+                                    },
+                                    bodyFont: {
+                                        size: 12,
+                                        family: 'Poppins'
+                                    },
+                                    padding: 12,
+                                    cornerRadius: 8
+                                },
+                                datalabels: {
+                                    anchor: 'end',
+                                    align: 'top',
+                                    color: '#1E293B',
+                                    font: {
+                                        family: 'Poppins',
+                                        weight: 'bold',
+                                        size: 12
+                                    },
+                                    formatter: function(value) {
+                                        return value;
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    grid: {
+                                        color: '#E2E8F0'
+                                    },
+                                    ticks: {
+                                        color: '#64748B',
+                                        font: {
+                                            family: 'Poppins'
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Number of Parts',
+                                        color: '#334155',
+                                        font: {
+                                            family: 'Poppins',
+                                            size: 14,
+                                            weight: '600'
+                                        }
+                                    }
+                                },
+                                x: {
+                                    grid: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        color: '#64748B',
+                                        font: {
+                                            family: 'Poppins',
+                                            weight: '600'
+                                        }
+                                    }
+                                }
+                            },
+                            animation: {
+                                duration: 1500,
+                                easing: 'easeOutQuart'
+                            }
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading seasonal stats:', error);
+                    document.getElementById('seasonChart').innerHTML = 
+                        '<div class="apx1-chart-error">Failed to load statistics data</div>';
+                });
+        });
+    </script>
+</body>
+</html>

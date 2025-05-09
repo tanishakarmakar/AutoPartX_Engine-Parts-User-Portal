@@ -27,6 +27,11 @@
                     </span>
                 </a>
 
+                <!-- ✅ New Seasonal Stats Icon -->
+    <a th:href="@{/seasonal-stats}" class="apx-stats-btn ms-3">
+        <i class="fas fa-chart-line fa-lg" title="Seasonal Stats" style="color: white;"></i>
+    </a>
+
                 <div class="apx-profile-dropdown" sec:authorize="isAuthenticated()">
                     <div class="apx-profile-trigger">
                         <img th:src="@{/images/default-pfp.png}" class="apx-profile-pic" alt="Profile">
