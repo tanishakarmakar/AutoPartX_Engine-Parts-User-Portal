@@ -4,6 +4,9 @@ import com.example.demo.model.User;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.NotificationService;
 import com.example.demo.service.UserService;
+
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -67,4 +70,19 @@ public class NotificationController {
         }
         return "redirect:/notifications";
     }
+
+    @GetMapping("/unseen-count")
+@ResponseBody
+public Map<String, Long> getUnseenCount(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    Map<String, Long> response = new HashMap<>();
+    if (userDetails != null) {
+        User user = userDetails.getUser();
+        long count = notificationService.countUnseenNotifications(user);
+        response.put("count", count);
+    } else {
+        response.put("count", 0L);
+    }
+    return response;
+}
+
 }

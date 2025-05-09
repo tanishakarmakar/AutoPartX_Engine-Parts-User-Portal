@@ -115,4 +115,8 @@ public void markAsSeen(Long notificationId, User user) {
         }
         return LocalDate.of(year, month, 1).plusMonths(1).minusDays(1);
     }
+
+    public long countUnseenNotifications(User user) {
+        return notificationRepository.countByUserAndSeenFalse(user);
+    }
 }

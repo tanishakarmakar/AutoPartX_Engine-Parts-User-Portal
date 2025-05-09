@@ -10,6 +10,7 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 
+<body>
 <header th:fragment="header">
     <nav class="apx-navbar">
         <div class="apx-nav-container">
@@ -17,15 +18,15 @@
                 <img th:src="@{/images/logo.png}" width="50" height="50" class="apx-logo" alt="">
                 AutoPartX
             </a>
-            
+
             <div class="apx-nav-controls">
-                <a th:href="@{/notifications}" class="apx-notification-btn">
+                <a th:href="@{/notifications}" class="apx-notification-btn position-relative">
                     <i class="fas fa-bell"></i>
-                    <span th:if="${unseenCount > 0}" class="apx-notification-badge">
+                    <span th:if="${unseenCount > 0}" class="apx-notification-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         <span th:text="${unseenCount}">0</span>
                     </span>
                 </a>
-                
+
                 <div class="apx-profile-dropdown" sec:authorize="isAuthenticated()">
                     <div class="apx-profile-trigger">
                         <img th:src="@{/images/default-pfp.png}" class="apx-profile-pic" alt="Profile">
@@ -42,8 +43,46 @@
                         </form>
                     </div>
                 </div>
-                
             </div>
         </div>
     </nav>
 </header>
+
+<!-- Audio Element for Notification Ping -->
+<audio id="notification-sound" src="/sounds/ping.mp3" preload="auto"></audio>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let lastCount = 0;
+
+        function checkNotifications() {
+            fetch("/notifications/unseen-count")
+                .then(response => response.json())
+                .then(data => {
+                    const currentCount = data.count;
+                    const badge = document.querySelector(".apx-notification-badge span");
+
+                    if (currentCount > lastCount) {
+                        document.getElementById("notification-sound").play();
+                    }
+
+                    if (badge) {
+                        if (currentCount > 0) {
+                            badge.textContent = currentCount;
+                            badge.parentElement.style.display = "inline-block";
+                        } else {
+                            badge.parentElement.style.display = "none";
+                        }
+                    }
+
+                    lastCount = currentCount;
+                })
+                .catch(error => console.error("Failed to fetch notifications:", error));
+        }
+
+        // Check every 10 seconds
+        setInterval(checkNotifications, 10000);
+    });
+</script>
+</body>
+</html>

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findByUserAndSeenFalse(User user);
     List<Notification> findByUserOrderByCreatedAtDesc(User user);
+    long countByUserAndSeenFalse(User user); // <-- Add this line
 
     @Modifying
 @Query("UPDATE Notification n SET n.seen = true WHERE n.user = :user AND n.seen = false")

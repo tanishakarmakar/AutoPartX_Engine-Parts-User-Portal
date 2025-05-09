@@ -1,15 +1,6 @@
 /* Custom styles */
 
-/* Notification bell animation */
-@keyframes ring {
-    0% { transform: rotate(0deg); }
-    5% { transform: rotate(15deg); }
-    10% { transform: rotate(-15deg); }
-    15% { transform: rotate(15deg); }
-    20% { transform: rotate(-15deg); }
-    25% { transform: rotate(0deg); }
-    100% { transform: rotate(0deg); }
-}
+
 
 .bi-bell {
     animation: ring 4s infinite;
@@ -337,7 +328,7 @@
 }
 
 .apx-tagline {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     color: #E2E8F0;
     margin-bottom: 3rem;
 }
@@ -530,6 +521,7 @@
 .apx-notification-badge {
     position: absolute;
     top: -6px;
+    padding: 4px 6px;
     right: -8px;
     background: #DC2626; /* Turbo Red */
     color: white;
@@ -540,6 +532,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    animation: pop-in 0.3s ease-out;
+}
+
+@keyframes pop-in {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /* Profile Dropdown */

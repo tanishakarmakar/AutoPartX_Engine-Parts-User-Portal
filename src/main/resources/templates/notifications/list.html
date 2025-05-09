@@ -1,46 +1,70 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head">
-    <title>Notifications</title>
+    <title>AutoPartX | Notifications</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/styles1.css}"/>
 </head>
-<body>
+<body class="apx1-notifications-page">
     <div th:replace="fragments/header :: header"></div>
 
-    <main class="container my-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Your Notifications</h2>
+    <main class="apx1-notifications-container">
+        <div class="apx1-notifications-header">
+            <h1><i class="fas fa-bell"></i> Your Notifications</h1>
             <form th:action="@{/notifications/mark-all-seen}" method="post">
-                <button type="submit" class="btn btn-secondary">
-                    Mark All as Read
+                <button type="submit" class="apx1-btn apx1-mark-all-btn">
+                    <i class="fas fa-check-double"></i> Mark All as Read
                 </button>
             </form>
         </div>
 
-        <div th:if="${notifications.empty}">
-            <div class="alert alert-info">You have no notifications</div>
+        <div th:if="${notifications.empty}" class="apx1-empty-notifications">
+            <div class="apx1-empty-card">
+                <i class="fas fa-bell-slash"></i>
+                <h3>No Notifications</h3>
+                <p>You're all caught up!</p>
+            </div>
         </div>
 
-        <div class="list-group">
+        <div class="apx1-notifications-list">
             <div th:each="notification : ${notifications}" 
-                 class="list-group-item" 
-                 th:classappend="${notification.seen} ? '' : 'list-group-item-primary'">
-                <div class="d-flex justify-content-between">
-                    <span th:text="${notification.message}">Notification message</span>
-                    <small class="text-muted" 
-                           th:text="${#temporals.format(notification.createdAt, 'MMM dd, HH:mm')}">
-                        Jan 01, 12:00
-                    </small>
+                 class="apx1-notification-card" 
+                 th:classappend="${notification.seen} ? 'apx1-seen' : 'apx1-unseen'">
+                <div class="apx1-notification-content">
+                    <div class="apx1-notification-message" th:text="${notification.message}">Notification message</div>
+                    <div class="apx1-notification-meta">
+                        <span class="apx1-notification-time" 
+                              th:text="${#temporals.format(notification.createdAt, 'MMM dd, HH:mm')}">
+                            Jan 01, 12:00
+                        </span>
+                        <form th:action="@{/notifications/mark-seen/{id}(id=${notification.id})}" 
+                              method="post">
+                            <button type="submit" class="apx1-mark-btn">
+                                <i class="fas fa-check"></i> Mark as Read
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <form th:action="@{/notifications/mark-seen/{id}(id=${notification.id})}" 
-                      method="post" class="mt-2">
-                    <button type="submit" class="btn btn-sm btn-outline-primary">
-                        Mark as Read
-                    </button>
-                </form>
             </div>
         </div>
     </main>
 
     <div th:replace="fragments/footer :: footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to notification cards
+            const cards = document.querySelectorAll('.apx1-notification-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `all 0.4s ease ${index * 0.1}s`;
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 50);
+            });
+        });
+    </script>
 </body>
 </html>
