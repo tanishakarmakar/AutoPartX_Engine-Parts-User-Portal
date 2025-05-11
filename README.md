@@ -1,6 +1,3 @@
-Sure! Here's a ready-to-copy version of the `README.md` for your project in proper Markdown format:
-
----
 
 ````markdown
 # AutoPartX – Engine Parts User Portal 🚗🔧
