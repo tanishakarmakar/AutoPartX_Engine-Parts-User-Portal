@@ -49,7 +49,7 @@ cd AutoPartX_Engine-Parts-User-Portal
 2. Create a new database:
 
 ```sql
-CREATE DATABASE autopartx;
+CREATE DATABASE engine_parts_portal;
 ```
 
 3. Open the file `src/main/resources/application.properties` and update the following lines with your PostgreSQL credentials:
